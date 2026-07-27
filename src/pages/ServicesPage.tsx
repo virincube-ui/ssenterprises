@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import VehicleCard from '../components/VehicleCard';
 import InquiryForm from '../components/InquiryForm';
 
@@ -14,7 +14,13 @@ const services = [
 ];
 
 function ServicesPage() {
+  const inquiryRef = useRef<HTMLDivElement | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState('Container');
+
+  const scrollToInquiry = (vehicle: string) => {
+    setSelectedVehicle(vehicle);
+    inquiryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-24 pt-8 md:px-6">
@@ -31,12 +37,12 @@ function ServicesPage() {
             title={service.title}
             description={service.description}
             image={service.image}
-            onQuote={() => setSelectedVehicle(service.title)}
+            onQuote={() => scrollToInquiry(service.title)}
           />
         ))}
       </section>
 
-      <section className="mt-16 rounded-[32px] bg-white p-6 shadow-soft md:p-8">
+      <section ref={inquiryRef} className="mt-16 rounded-[32px] bg-white p-6 shadow-soft md:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.24em] text-brand">Inquiry form</p>
